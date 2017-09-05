@@ -10,11 +10,11 @@ import visualizer from 'rollup-plugin-visualizer';
 export default {
   entry: 'src/index.js',
   targets: [
-      { dest: 'dist/bundle.cjs.js', format: 'cjs', },
-      { dest: 'dist/bundle.umd.js', format: 'umd', },
+    { dest: 'dist/bundle.cjs.js', format: 'cjs' },
+    { dest: 'dist/bundle.umd.js', format: 'umd' },
   ],
-  moduleId: 'fenugreek-collections',
-  moduleName: 'fenugreek-collections',
+  moduleId: 'functionalgs',
+  moduleName: 'functionalgs',
   sourceMap: true,
   exports: 'named',
   plugins: [
@@ -22,12 +22,12 @@ export default {
     commonjs(),
     babel({
       exclude: 'node_modules/**',
-      plugins:  [ 'external-helpers', ],
+      plugins: [ 'external-helpers' ],
     }),
-    progress({ clearLine: false, }),
+    progress({ clearLine: false }),
     filesize(),
-    visualizer({ filename: 'stats.html', }),
-    replace({ ENV: JSON.stringify(process.env.NODE_ENV || 'development'), }),
-    (process.env.NODE_ENV === 'production' && uglify()),
+    visualizer({ filename: 'stats.html' }),
+    replace({ ENV: JSON.stringify(process.env.NODE_ENV || 'development') }),
+    process.env.NODE_ENV === 'production' && uglify(),
   ],
 };
