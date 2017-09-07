@@ -14,7 +14,7 @@ export const iSort_orig = (coll) => {
   return arr;
 };
 
-const insertReduce = (acc, curr, cx, coll) => {
+const insertReduce = (acc, curr, cx) => {
   const res = [ ...acc ];
 
   let px = cx;
