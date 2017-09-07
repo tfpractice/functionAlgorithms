@@ -1,22 +1,110 @@
-// The nonrecursive, or iterative, version of Mergesort is referred to as a
-// bottom-up process.The algorithm begins by breaking down the data set being
-// sorted into a set of oneelementarrays. Then these arrays are slowly merged
-// by creating a set of left and rightsubarrays, each holding the partially
-//  sorted data until all that is left is one array with thedata perfectly
-// sorted.
-
 const single = el => [ el, Infinity ];
 const split = arr => arr.map(single);
+const addLesser = (a, b) => coll => coll.concat(a <= b ? a : b);
 
+const mergeSlice = (lArr, rArr) => {
+  let rx = 0;
+  let lx = 0;
+  let res = [];
+  const lCopy = lArr.concat(Infinity);
+  const rCopy = rArr.concat(Infinity);
+  const maxLen = lArr.length + rArr.length;
+
+  for (let k = 0; k < maxLen; ++k) {
+    const lVal = lCopy[lx];
+    const rVal = rCopy[rx];
+
+    res = addLesser(lVal, rVal)(res);
+    if (lVal <= rVal) {
+      lx++;
+    } else {
+      rx++;
+    }
+  }
+
+  return res;
+};
+
+export function topMerge(coll) {
+  if (coll.length < 2) {
+    return coll;
+  }
+
+  const sliceX = Math.ceil(coll.length / 2);
+
+  const lSlice = coll.slice(0, sliceX);
+  const rSlice = coll.slice(sliceX);
+
+  return mergeSlice(topMerge(lSlice), topMerge(rSlice));
+}
+
+export const merger = (arr, lStart, rStart, step) => {
+  const res = [ ...arr ];
+
+  if (step >= arr.length) {
+    return arr;
+  }
+  let catRes = [];
+  let catRes2 = [];
+  const stopRight = rStart + step > arr.length ? arr.length : rStart + step;
+  const rCopy = arr.slice(rStart, stopRight).concat(Infinity);
+  const lCopy = arr.slice(lStart, lStart + step).concat(Infinity);
+
+  let m = 0;
+  let n = 0;
+  const rx = 0;
+  const lx = 0;
+
+  for (let k = lStart; k < stopRight; ++k) {
+    catRes2 = addLesser(lCopy[m], rCopy[n])(catRes2);
+
+    if (lCopy[m] <= rCopy[n]) {
+      res[k] = lCopy[m];
+      catRes = catRes.concat(lCopy[m]);
+      m++;
+    } else {
+      res[k] = rCopy[n];
+      catRes = catRes.concat(rCopy[n]);
+      n++;
+    }
+  }
+
+  const next = merger([ ...arr ], lx + 1, rx + 1, step * 2);
+
+  return res;
+};
+
+export const mergeSort = (arr) => {
+  if (arr.length < 2) {
+    return arr;
+  }
+
+  let step = 1;
+  let lx, rx;
+  let topRes = [];
+  let mres = [ ...arr ];
+
+  while (step < arr.length) {
+    lx = 0;
+    rx = step;
+    while (rx + step <= arr.length) {
+      mres = merger(mres, lx, rx, step);
+      topRes = topRes.concat(merger(mres, lx, rx, step));
+      lx = rx + step;
+      rx = lx + step;
+    }
+    if (rx < arr.length) {
+      mres = merger(mres, lx, rx, step);
+    }
+
+    step *= 2;
+  }
+
+  return mres;
+};
 export const mArrs = (arr, startLeft, stopLeft, startRight, stopRight) => {
-  // const rightArr = new Array(stopRight - startRight + 1);
-  const rightArr = arr.slice(startRight, stopRight).concat(Infinity);
-  const rCopy = arr.slice(startRight, stopRight);
-
-  // const leftArr = new Array(stopLeft - startLeft + 1);
-  const leftArr = arr.slice(startLeft, stopLeft).concat(Infinity);
-  const lCopy = arr.slice(startLeft, stopLeft);
-
+  const rightArr = new Array(stopRight - startRight + 1);
+  const leftArr = new Array(stopLeft - startLeft + 1);
   let k = startRight;
 
   for (let i = 0; i < rightArr.length - 1; ++i) {
@@ -29,61 +117,8 @@ export const mArrs = (arr, startLeft, stopLeft, startRight, stopRight) => {
     leftArr[i] = arr[k];
     ++k;
   }
-
-  console.log('rightArr', rightArr);
-  console.log('leftArr', leftArr);
-
-  // rightArr[rightArr.length - 1] = Infinity; // a sentinel value
-  // leftArr[leftArr.length - 1] = Infinity; // a sentinel value
-
-  // console.log('rightArr', rightArr);
-  // console.log('leftArr', leftArr);
-  let m = 0;
-  let n = 0;
-
-  for (k = startLeft; k < stopRight; ++k) {
-    if (leftArr[m] <= rightArr[n]) {
-      arr[k] = leftArr[m];
-      m++;
-    } else {
-      arr[k] = rightArr[n];
-      n++;
-    }
-  }
-};
-
-export const merger = (arr, startLeft, stopLeft, startRight, stopRight) => {
-  // const rightArr = new Array(stopRight - startRight + 1);
-  const rightArr = arr.slice(startRight, stopRight).concat(Infinity);
-  const rCopy = arr.slice(startRight, stopRight);
-
-  // const leftArr = new Array(stopLeft - startLeft + 1);
-  const leftArr = arr.slice(startLeft, stopLeft).concat(Infinity);
-  const lCopy = arr.slice(startLeft, stopLeft);
-
-  //
-  let k;
-
-  //
-  // for (let i = 0; i < rightArr.length - 1; ++i) {
-  //   rightArr[i] = arr[k];
-  //   ++k;
-  // }
-  //
-  // k = startLeft;
-  // for (let i = 0; i < leftArr.length - 1; ++i) {
-  //   leftArr[i] = arr[k];
-  //   ++k;
-  // }
-
-  console.log('rightArr', rightArr);
-  console.log('leftArr', leftArr);
-
-  // rightArr[rightArr.length - 1] = Infinity; // a sentinel value
-  // leftArr[leftArr.length - 1] = Infinity; // a sentinel value
-
-  // console.log('rightArr', rightArr);
-  // console.log('leftArr', leftArr);
+  rightArr[rightArr.length - 1] = Infinity; // a sentinel value
+  leftArr[leftArr.length - 1] = Infinity; // a sentinel value
   let m = 0;
   let n = 0;
 
@@ -122,23 +157,5 @@ export const mSort_orig = (arr) => {
 
     step *= 2;
   }
-};
-
-export const mSort = (arr) => {
-  if (arr.length < 2) {
-    return [];
-  }
-
-  const step = 1;
-  let lx, rx;
-
-  while (step < arr.length) {
-    lx = 0;
-    rx = step;
-    while (rx + step <= arr.length) {
-      mArrs(arr, lx, lx + step, rx, rx + step);
-      lx = rx + step;
-      rx = lx + step;
-    }
-  }
+  return arr;
 };
