@@ -69,8 +69,6 @@ export const merger = (arr, lStart, rStart, step) => {
     }
   }
 
-  const next = merger([ ...arr ], lx + 1, rx + 1, step * 2);
-
   return res;
 };
 
