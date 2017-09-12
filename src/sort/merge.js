@@ -1,6 +1,36 @@
+import {
+  append,
+  first,
+  isEmpty,
+  lessThan,
+  lSlice,
+  rest,
+  rSlice,
+} from './utils';
+
 const single = el => [ el, Infinity ];
+const sent = val => [].concat(val).concat(Infinity);
 const split = arr => arr.map(single);
 const addLesser = (a, b) => coll => coll.concat(a <= b ? a : b);
+
+const hasLesser = c0 => c1 => first(c0) <= first(c1);
+const getLesser = c0 => c1 => (hasLesser(c0)(c1) ? c0 : c1);
+const firstLess = c0 => c1 => first(getLesser(c0)(c1));
+const restLess = c0 => c1 => rest(getLesser(c0)(c1));
+const sliceLess = c0 => c1 => (hasLesser(c0)(c1) ? rest(c0) : c0);
+
+// const sliceLess = c0 => c1 => (hasLesser(c0)(c1) ? rest(c0) : rest(c0));
+
+export const mergeLess = (c0, c1) => (acc = []) =>
+  isEmpty(c0) || isEmpty(c1)
+    ? append(c0)(append(c1)(acc))
+    : mergeLess([ ...sliceLess(c0)(c1) ], [ ...sliceLess(c1)(c0) ])(
+      append(firstLess(c0)(c1))(acc)
+    );
+export const mergeTail = coll =>
+  coll.length < 2
+    ? coll
+    : mergeLess(mergeTail(lSlice(coll)), mergeTail(rSlice(coll)))([]);
 
 const mergeSlice = (lArr, rArr) => {
   let rx = 0;
@@ -32,10 +62,10 @@ export function topMerge(coll) {
 
   const sliceX = Math.ceil(coll.length / 2);
 
-  const lSlice = coll.slice(0, sliceX);
-  const rSlice = coll.slice(sliceX);
+  const leftSlice = coll.slice(0, sliceX);
+  const rightSlice = coll.slice(sliceX);
 
-  return mergeSlice(topMerge(lSlice), topMerge(rSlice));
+  return mergeSlice(topMerge(leftSlice), topMerge(rightSlice));
 }
 
 export const merger = (arr, lStart, rStart, step) => {
