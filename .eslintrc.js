@@ -47,7 +47,7 @@ module.exports = {
     'handle-callback-err': 1,
     camelcase: 0,
     'max-len': [2, { code: 80, comments: 80 }],
-    'newline-per-chained-call': ['error', { ignoreChainWithDepth: 3 }],
+    'newline-per-chained-call': ['error', { ignoreChainWithDepth: 4 }],
     // Errors
     'func-call-spacing': ['error', 'never'],
     'no-undef': 'off',
