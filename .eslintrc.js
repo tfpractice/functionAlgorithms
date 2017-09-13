@@ -26,6 +26,7 @@ module.exports = {
 
   rules: {
     // Ignore Rules
+    'no-nested-ternary': 0,
     'space-infix-ops': 2,
     strict: 1,
     'space-before-function-paren': 0,
