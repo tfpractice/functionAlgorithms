@@ -5,14 +5,14 @@ function Node(data, left, right) {
   this.show = show;
 }
 
-const node = (data = null, left = null, right = null) => ({
+export const node = (data = null, left = null, right = null) => ({
   data,
   left,
   right,
 });
-const getData = ({ data } = { data: null }) => data;
-const getLeft = ({ left } = { left: null }) => left;
-const getRight = ({ right } = { right: null }) => right;
+export const getData = ({ data } = node()) => data;
+export const getLeft = ({ left } = node()) => left;
+export const getRight = ({ right } = node()) => right;
 
 export const setData = d => n => node(d, getLeft(n), getRight(n));
 export const setLeft = l => n => node(getData(n), l, getRight(n));
@@ -22,46 +22,74 @@ export const xData = node => getData(node) == null;
 export const ltData = node => next => getData(next) < getData(node);
 export const gtData = node => next => getData(next) > getData(node);
 
+export const addChild = next => (n) => {
+  let updated = n;
+
+  if (ltData(n)(next)) {
+    updated = getLeft(n) ? addChild(next)(getLeft(n)) : setLeft(next)(n);
+  } else if (gtData(n)(next)) {
+    updated = getRight(n) ? addChild(next)(getRight(n)) : setRight(next)(n);
+  }
+
+  return updated;
+};
 export const addLeft = next => n =>
   ltData(n)(next)
-    ? xData(getLeft(n)) ? setLeft(next)(n) : addLeft(next)(getLeft(n))
+    ? getLeft(n) ? addChild(next)(getLeft(n)) : setLeft(next)(n)
     : n;
 
 export const addRight = next => n =>
   gtData(n)(next)
-    ? xData(getRight(n)) ? setRight(next)(n) : addRight(next)(getRight(n))
+    ? getRight(n) ? addChild(next)(getRight(n)) : setRight(next)(n)
     : n;
 
-export const tree = (src = node()) => ({ src });
-export const getSrc = ({ src = null }) => src;
-export const setSrc = src => t => tree(src);
+export const tree = (src = null) => ({ src });
+export const getSrc = ({ src }) => src;
+export const setSrc = src => (t = tree()) =>
+  getSrc(t) ? tree(addChild(getSrc(t))(src)) : tree(src);
 
-export const addNode = node => t => (getSrc(t) == null ? setSrc(node)(t) : {});
+export const addNode = node => t => setSrc(node)(t);
 
-function insert(data) {
-  const n = new Node(data, null, null);
+export const addNodeBin = (t = tree(), n) => addNode(n)(t);
 
-  if (this.root == null) {
-    this.root = n;
-  } else {
-    let current = this.root;
-    let parent;
+export const inOrder = node =>
+  node
+    ? []
+      .concat(inOrder(getLeft(node)))
+      .concat(getData(node))
+      .concat(inOrder(getRight(node)))
+    : [];
 
-    while (true) {
-      parent = current;
-      if (data < current.data) {
-        current = current.left;
-        if (current == null) {
-          parent.left = n;
-          break;
-        }
-      } else {
-        current = current.right;
-        if (current == null) {
-          parent.right = n;
-          break;
-        }
-      }
-    }
+export const preOrder = node =>
+  node
+    ? []
+      .concat(getData(node))
+      .concat(preOrder(getLeft(node)))
+      .concat(preOrder(getRight(node)))
+    : [];
+
+export const postOrder = node =>
+  node
+    ? []
+      .concat(postOrder(getLeft(node)))
+      .concat(postOrder(getRight(node)))
+      .concat(getData(node))
+    : [];
+
+export const getMin = (tree) => {
+  let current = getSrc(tree);
+
+  while (getLeft(current)) {
+    current = getLeft(current);
   }
-}
+  return getData(current);
+};
+
+export const getMax = (tree) => {
+  let current = getSrc(tree);
+
+  while (getRight(current)) {
+    current = getRight(current);
+  }
+  return getData(current);
+};
