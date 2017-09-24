@@ -44,9 +44,9 @@ export const gtPrev = (h, ix, arr) =>
 
 export const firstPeak = arr => arr.find(gtNext);
 export const firstPIx = arr => arr.findIndex(gtNext);
-export const rBound = ht => arr => arr.find(gte(ht));
-export const rBIx = ht => arr => arr.findIndex(gte(ht));
+export const rBound = arr => ht => arr.find(gte(ht));
+export const rBIx = arr => ht => arr.findIndex(gte(ht));
 export const getBounds = arr => [
   firstPeak(arr),
-  rBound(firstPeak(arr)(arr.slice(firstPIx(arr)))),
+  rBound(arr.slice(firstPIx(arr)))(firstPeak(arr)),
 ];

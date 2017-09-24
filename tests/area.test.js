@@ -61,3 +61,19 @@ describe('firstPIx', () => {
     expect(firstPIx(myHeights)).toEqual(1);
   });
 });
+describe('rBound', () => {
+  it('returns the rightbound of a peak', () => {
+    console.log(
+      'rBound(firstPeak(myHeights)(myHeights',
+      rBound(myHeights)(firstPeak(myHeights))
+    );
+  });
+});
+describe('rBIx', () => {
+  it('finds the index of the right bound', () => {
+    console.log(
+      'rBIx(firstPeak(myHeights))(myHeights)',
+      rBIx(myHeights)(firstPeak(myHeights))
+    );
+  });
+});
