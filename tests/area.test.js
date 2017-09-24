@@ -1,11 +1,18 @@
 import 'jasmine-expect';
 import {
   diff,
+  firstPeak,
+  firstPIx,
+  getBounds,
   getDiff,
   getDiffs,
   getNext,
+  gtNext,
+  gtPrev,
   hasNext,
   peaks,
+  rBIx,
+  rBound,
   total,
 } from 'src/area';
 
@@ -31,9 +38,26 @@ describe('getDiff', () => {
 });
 describe('getDiffs', () => {
   it('maps an array to the differences', () => {
-    console.log('getDiffs(myHeights)', getDiffs(myHeights));
-    expect(getDiffs(myHeights)).toBeArray();
-    console.log('peaks(myHeights)', peaks(myHeights));
-    console.log('total(myHeights)', total(myHeights));
+    // console.log('getDiffs(myHeights)', getDiffs(myHeights));
+    // expect(getDiffs(myHeights)).toBeArray();
+    // console.log('peaks(myHeights)', peaks(myHeights));
+    // console.log('total(myHeights)', total(myHeights));
+  });
+});
+describe('gtNext', () => {
+  it('checks if an elements value is greater than its neighbors', () => {
+    console.log('myHeights.find(gtNext)', myHeights.find(gtNext));
+    expect(myHeights.find(gtNext)).toEqual(3);
+  });
+});
+describe('firstPeak', () => {
+  it('FINDS THE firstPeak', () => {
+    expect(firstPeak(myHeights)).toEqual(3);
+  });
+});
+describe('firstPIx', () => {
+  it('returns the peak index', () => {
+    console.log('firstPIx(myHeights)', firstPIx(myHeights));
+    expect(firstPIx(myHeights)).toEqual(1);
   });
 });
