@@ -1,5 +1,7 @@
 import 'jasmine-expect';
 import {
+  boundMap,
+  boundTuple,
   diff,
   firstPeak,
   firstPIx,
@@ -11,7 +13,6 @@ import {
   gtPrev,
   hasNext,
   peaks,
-  boundMap, boundTuple
   rBIx,
   rBound,
   total,
@@ -74,8 +75,9 @@ describe('rBIx', () => {
   it('finds the index of the right bound', () => {
     console.log(
       'rBIx(firstPeak(myHeights))(myHeights)',
-      rBIx(myHeights)(firstPeak(myHeights))     
+      rBIx(myHeights)(firstPeak(myHeights))
     );
-    // console.log("boundMap(myHeights)",boundMap(myHeights))
+
+    console.log('boundMap(myHeights)', boundMap(myHeights));
   });
 });

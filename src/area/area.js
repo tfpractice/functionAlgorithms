@@ -44,7 +44,7 @@ export const gtPrev = (h, ix, arr) =>
 
 export const firstPeak = arr => arr.find(gtNext);
 export const firstPIx = arr => arr.findIndex(gtNext);
-export const rBound = arr => ht => arr.find(gte(ht));
+export const rBound = arr => ht => arr.find(gte(ht)) || firstPeak(arr);
 export const rBIx = arr => ht => arr.findIndex(gte(ht));
 export const getBounds = arr => [
   firstPeak(arr),
@@ -52,7 +52,7 @@ export const getBounds = arr => [
 ];
 export const boundTuple = arr => (el, ix, arr) => [
   el,
-  rBound(arr.slice(ix))(el),
+  rBound(arr.slice(ix + 1))(el),
 ];
 
 export const boundMap = arr => arr.map(boundTuple(arr));
