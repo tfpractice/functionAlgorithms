@@ -44,7 +44,7 @@ export const gtPrev = (h, ix, arr) =>
 
 export const firstPeak = arr => arr.find(gtNext);
 export const firstPIx = arr => arr.findIndex(gtNext);
-export const rBound = arr => ht => arr.find(gte(ht)) || firstPeak(arr);
+export const rBound = arr => ht => arr.find(gte(ht)) || ht;
 export const rBIx = arr => ht => arr.findIndex(gte(ht));
 export const getBounds = arr => [
   firstPeak(arr),
@@ -54,5 +54,36 @@ export const boundTuple = arr => (el, ix, arr) => [
   el,
   rBound(arr.slice(ix + 1))(el),
 ];
+
+export const maxArea = arr => (el, ix, soll) =>
+  Math.min(...boundTuple(arr)(el, ix, arr));
+
+export const sumPool = arr => (el, ix, coll) => {
+  let sum = 0;
+
+  if (gtNext(el, ix, arr)) {
+    const minHt = maxArea(arr)(el, ix, arr);
+
+    const nextPeak = rBound(arr.slice(ix + 1))(el);
+    const areas = arr.slice(ix + 1);
+    let nextVal = areas.pop();
+    const currslice = arr.slice(ix);
+
+    console.log(
+      'minHt,nextPeak, nextVal',
+      minHt,
+      nextPeak,
+      nextVal,
+      'currslice',
+      currslice
+    );
+    while (nextVal < nextPeak) {
+      console.log('sum', sum);
+      sum += minHt - nextVal;
+      nextVal = areas.pop();
+    }
+  }
+  return sum;
+};
 
 export const boundMap = arr => arr.map(boundTuple(arr));
