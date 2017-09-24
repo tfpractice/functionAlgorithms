@@ -50,3 +50,9 @@ export const getBounds = arr => [
   firstPeak(arr),
   rBound(arr.slice(firstPIx(arr)))(firstPeak(arr)),
 ];
+export const boundTuple = arr => (el, ix, arr) => [
+  el,
+  rBound(arr.slice(ix))(el),
+];
+
+export const boundMap = arr => arr.map(boundTuple(arr));
